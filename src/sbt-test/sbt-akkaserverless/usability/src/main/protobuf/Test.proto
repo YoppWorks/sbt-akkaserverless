@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "scalapb/scalapb.proto";
+
+option java_multiple_files = false;
+option java_package = "test.java";
+option java_outer_classname = "TestProto";
+
+option (scalapb.options) = {
+  single_file: true
+  lenses: false
+  package_name: "test.scala"
+  retain_source_code_info: true
+};
+
+service TestService {
+  rpc sendMessage(SimpleMessage) returns(SimpleMessage);
+}
+
+message SimpleMessage {
+  string someValue = 1;
+}
