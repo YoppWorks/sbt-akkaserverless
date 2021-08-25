@@ -1,4 +1,5 @@
 .idea/
+.bsp/
 target/
 project/target/
 *.class
