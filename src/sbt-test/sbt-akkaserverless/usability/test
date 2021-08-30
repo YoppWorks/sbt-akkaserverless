@@ -25,4 +25,9 @@
 # Pause to debug following lines
 # $ pause
 # Make sure grpc service descriptor is generated as part of akka-grpc artifacts
-$ exists target/scala-2.13/akka-grpc/main/test/scala/TestServiceClient.scala
+$ exists target/scala-2.13/src_managed/main/scalapb/test/scala/Test/TestServiceGrpc.scala
+# Make sure generated message files are also there
+$ exists target/scala-2.13/src_managed/main/scalapb/test/scala/Test/TestProto.scala
+# Make sure validation files are also there
+$ exists target/scala-2.13/src_managed/main/scalapb/test/scala/Test/SimpleMessageValidator.scala
+
