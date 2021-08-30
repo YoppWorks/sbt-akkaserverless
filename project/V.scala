@@ -28,14 +28,6 @@ object V {
     val FrameworkVersion = akkaServerless
   }
 
-  object Module {
-    val akkaServerless = "com.akkaserverless"
-    val scalapb = "com.thesamet.scalapb"
-    val akka = "com.typesafe.akka"
-    val akkaGrpc = "com.lightbend.akka.grpc"
-    val googleGrpc= "io.grpc"
-  }
-
   object Plugins {
     val scalafmt = "2.4.2"
     val scoverage = "1.6.1"
@@ -44,35 +36,10 @@ object V {
     val git = "1.0.1"
     val nativePackager = "1.8.1"
     val akkaGrpc = "2.0.0"
+    val scalaPBRuntime = "0.11.3"
+    val scalaTest = "3.2.9"
+    val scalaPbJson = "0.11.0"
   }
 
-  /*
-  private val scalaPbLibs = Seq(
-    Module.scalapb %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "compile;protobuf",
-    Module.scalapb %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion % "compile;protobuf",
-    Module.scalapb %% "scalapb-validate-core" % scalapb.validate.compiler.BuildInfo.version % "compile;protobuf",
-    Module.scalapb %% "scalapb-validate-codegen" % "0.3.1",
-    Module.scalapb %% "scalapb-json4s" % V.scalaPbJson,
-    Module.scalapb %% "compilerplugin" % scalapb.compiler.Version.scalapbVersion
-  )
-
-   */
-
-  private val akkaGrpcLibs = Seq(
-    Module.akka	%% "akka-discovery"	% V.akka,
-    Module.akka	%% "akka-http-core" % V.akkaHttp,
-    Module.akka %% "akka-http" % V.akkaHttp,
-    Module.akka %% "akka-stream" % V.akka,
-    Module.akkaGrpc %% "akka-grpc-runtime" % V.akkaGrpc,
-    Module.googleGrpc % "grpc-core" 	% V.grpc,
-    Module.googleGrpc % "grpc-netty-shaded"	% V.grpc
-  )
-
-  val dependencies = Seq(
-    Module.akkaServerless % "akkaserverless-proxy-protocol" % AkkaServerless.FrameworkVersion % "compile;protobuf",
-    Module.akkaServerless % "akkaserverless-sdk-protocol" % AkkaServerless.FrameworkVersion % "compile;protobuf",
-    "ch.qos.logback" % "logback-classic" % logback,
-    "org.scalatest" %% "scalatest" % scalaTest % Test,
-  )
 
 }

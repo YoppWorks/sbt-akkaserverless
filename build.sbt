@@ -1,4 +1,4 @@
-import sbt._
+import sbt.{addSbtPlugin, _}
 import sbt.Keys._
 
 lazy val `sbt-akkaserverless` = project.in(file("."))
@@ -25,4 +25,9 @@ lazy val `sbt-akkaserverless` = project.in(file("."))
     addSbtPlugin("com.typesafe.sbt"         % "sbt-git"             % V.Plugins.git),
     addSbtPlugin("com.typesafe.sbt"         % "sbt-native-packager" % V.Plugins.nativePackager),
     addSbtPlugin("com.lightbend.akka.grpc"  % "sbt-akka-grpc"       % V.Plugins.akkaGrpc),
+    addSbtPlugin("com.thesamet"             % "sbt-protoc"          % "1.0.3"),
+    libraryDependencies ++= Seq(
+      "com.thesamet.scalapb" %% "compilerplugin"           % "0.11.1",
+      "com.thesamet.scalapb" %% "scalapb-validate-codegen" % "0.3.1"
+    )
   )
