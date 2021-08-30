@@ -14,6 +14,7 @@ import sbtdynver.DynVerPlugin
 import sbtprotoc.ProtocPlugin.autoImport.PB
 import akka.grpc.sbt.AkkaGrpcPlugin
 import akka.grpc.sbt.AkkaGrpcPlugin.autoImport._
+import scalapb.GeneratorOption.FlatPackage
 
 
 /** The AkkaServerless Plugin */
@@ -100,7 +101,12 @@ object AkkaServerlessPlugin extends AutoPlugin {
     Test / akkaGrpcGeneratedLanguages := Seq(AkkaGrpc.Scala),
     Test / akkaGrpcGeneratedSources := Seq(AkkaGrpc.Client, AkkaGrpc.Server),
     Test / PB.protoSources ++= (Compile / PB.protoSources).value,
-    Test / mainClass := Some("shopping.Main"),
+
+    // Support Apple M1 chips with locally installed/compiled protoc
+    PB.protocExecutable := {
+      if (protocbridge.SystemDetector.detectedClassifier() == "osx-aarch_64") file("/usr/local/bin/protoc")
+      else PB.protocExecutable.value
+    },
 
     Compile / PB.targets := Seq(
       scalapb.gen() -> (Compile / sourceManaged).value / "scalapb",
