@@ -7,11 +7,13 @@ import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport._
 import com.typesafe.sbt.{GitPlugin, SbtNativePackager}
 import org.scalafmt.sbt.ScalafmtPlugin
 import sbt.Keys._
-import sbt.{AutoPlugin, _}
 import sbt.nio.Keys.{ReloadOnSourceChanges, onChangedBuildSource}
+import sbt.{AutoPlugin, _}
 import sbtbuildinfo.BuildInfoPlugin
 import sbtdynver.DynVerPlugin
 import sbtprotoc.ProtocPlugin.autoImport.PB
+import akka.grpc.sbt.AkkaGrpcPlugin
+import akka.grpc.sbt.AkkaGrpcPlugin.autoImport._
 
 
 /** The AkkaServerless Plugin */
