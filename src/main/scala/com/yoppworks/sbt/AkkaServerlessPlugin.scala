@@ -1,19 +1,16 @@
 package com.yoppworks.sbt
 
-import com.typesafe.sbt.{GitPlugin, SbtNativePackager}
-import sbt._
-import sbt.Keys._
-import sbt.AutoPlugin
+import com.typesafe.sbt.packager.Keys.{dockerRepository, packageName}
 import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
 import com.typesafe.sbt.packager.docker.DockerPlugin
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport._
+import com.typesafe.sbt.{GitPlugin, SbtNativePackager}
 import org.scalafmt.sbt.ScalafmtPlugin
+import sbt.Keys._
+import sbt.{AutoPlugin, _}
+import sbt.nio.Keys.{ReloadOnSourceChanges, onChangedBuildSource}
 import sbtbuildinfo.BuildInfoPlugin
 import sbtdynver.DynVerPlugin
-import akka.grpc.sbt.AkkaGrpcPlugin
-import akka.grpc.sbt.AkkaGrpcPlugin.autoImport._
-import com.typesafe.sbt.packager.Keys.{dockerRepository, packageName}
-import sbt.nio.Keys.{ReloadOnSourceChanges, onChangedBuildSource}
 import sbtprotoc.ProtocPlugin.autoImport.PB
 
 
@@ -64,21 +61,26 @@ object AkkaServerlessPlugin extends AutoPlugin {
   )
 
   private val akkaGrpcLibs = Seq(
-    Module.akka	%% "akka-discovery"	% akka,
-    Module.akka	%% "akka-http-core" % akkaHttp,
+    Module.akka %% "akka-discovery" % akka,
+    Module.akka %% "akka-http-core" % akkaHttp,
     Module.akka %% "akka-http" % akkaHttp,
     Module.akka %% "akka-stream" % akka,
     Module.akkaGrpc %% "akka-grpc-runtime" % akkaGrpc,
-    Module.googleGrpc % "grpc-core" 	% grpc,
-    Module.googleGrpc % "grpc-netty-shaded"	% grpc
+    Module.googleGrpc % "grpc-core" % grpc,
+    Module.googleGrpc % "grpc-netty-shaded" % grpc
   )
 
-  val dependencies = akkaGrpcLibs ++ scalaPbLibs ++ Seq(
-    Module.akkaServerless % "akkaserverless-proxy-protocol" % AkkaServerless.FrameworkVersion % "compile;protobuf",
-    Module.akkaServerless % "akkaserverless-sdk-protocol" % AkkaServerless.FrameworkVersion % "compile;protobuf",
+  private val akkaServerlessLibs = Seq(
+    Module.akkaServerless % "akkaserverless-proxy-protocol" % akkaServerless % "compile;protobuf",
+    Module.akkaServerless % "akkaserverless-sdk-protocol" % akkaServerless % "compile;protobuf",
+    Module.akkaServerless % "akkaserverless-java-sdk" % akkaServerless,
+    Module.akkaServerless % "akkaserverless-java-sdk-testkit" % akkaServerless % Test,
     "ch.qos.logback" % "logback-classic" % logback,
-    "org.scalatest" %% "scalatest" % scalaTest % Test,
+    "ch.qos.logback.contrib" % "logback-json-classic" % "0.1.5",
+    "org.scalatest" %% "scalatest" % scalaTest % Test
   )
+
+  val dependencies: Seq[ModuleID] = akkaGrpcLibs ++ scalaPbLibs ++ akkaServerlessLibs
 
   override def projectSettings = Seq(
     dockerBaseImage := "adoptopenjdk/openjdk11:jre-11.0.8_10-ubi",
