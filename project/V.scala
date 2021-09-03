@@ -35,8 +35,8 @@ object V {
     val buildInfo = "0.9.0"
     val git = "1.0.1"
     val nativePackager = "1.8.1"
-    val akkaGrpc = "2.0.0"
-    val scalaPBRuntime = "0.11.3"
+    val akkaGrpc = "2.1.0"
+    val scalaPBRuntime = "0.11.5"
     val scalaTest = "3.2.9"
     val scalaPbJson = "0.11.0"
   }

@@ -4,24 +4,18 @@ import com.typesafe.sbt.packager.Keys.{dockerRepository, packageName}
 import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
 import com.typesafe.sbt.packager.docker.DockerPlugin
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport._
-import com.typesafe.sbt.{GitPlugin, SbtNativePackager}
-import org.scalafmt.sbt.ScalafmtPlugin
+import com.typesafe.sbt.SbtNativePackager
 import sbt.Keys._
-import sbt.nio.Keys.{ReloadOnSourceChanges, onChangedBuildSource}
-import sbt.{AutoPlugin, _}
-import sbtbuildinfo.BuildInfoPlugin
-import sbtdynver.DynVerPlugin
+import sbt.{AutoPlugin, Def, _}
 import sbtprotoc.ProtocPlugin.autoImport.PB
 import akka.grpc.sbt.AkkaGrpcPlugin
 import akka.grpc.sbt.AkkaGrpcPlugin.autoImport._
-import scalapb.GeneratorOption.FlatPackage
 
 
 /** The AkkaServerless Plugin */
 object AkkaServerlessPlugin extends AutoPlugin {
   override def requires: Plugins =
-    JavaAppPackaging && DockerPlugin && DynVerPlugin && ScalafmtPlugin && BuildInfoPlugin && GitPlugin &&
-      SbtNativePackager && AkkaGrpcPlugin
+    JavaAppPackaging && DockerPlugin && SbtNativePackager && AkkaGrpcPlugin
 
   val akka = "2.6.16"
   val akkaGrpc = "2.0.0"
@@ -85,37 +79,35 @@ object AkkaServerlessPlugin extends AutoPlugin {
 
   val dependencies: Seq[ModuleID] = akkaGrpcLibs ++ scalaPbLibs ++ akkaServerlessLibs
 
-  override def projectSettings = Seq(
-    dockerBaseImage := "adoptopenjdk/openjdk11:jre-11.0.8_10-ubi",
-    dockerUsername := Some("akkaserverless"),
-    dockerUpdateLatest := true,
-    scalaVersion := "2.13.5",
-    Global / onChangedBuildSource := ReloadOnSourceChanges,
-    ThisBuild / DynVerPlugin.autoImport.dynverSeparator := "-",
-    ThisBuild / versionScheme := Some("semver-spec"),
-    ThisBuild / evictionErrorLevel := Level.Warn,
-    excludeLintKeys ++= Set(packageName, dockerRepository),
-    libraryDependencies ++= dependencies,
-    Compile / akkaGrpcGeneratedLanguages := Seq(AkkaGrpc.Scala),
-    Compile / akkaGrpcGeneratedSources := Seq(AkkaGrpc.Client, AkkaGrpc.Server),
-    Test / akkaGrpcGeneratedLanguages := Seq(AkkaGrpc.Scala),
-    Test / akkaGrpcGeneratedSources := Seq(AkkaGrpc.Client, AkkaGrpc.Server),
-    Test / PB.protoSources ++= (Compile / PB.protoSources).value,
+  override def projectSettings: Seq[Def.Setting[_]] = {
+    Seq(
+      dockerBaseImage := "adoptopenjdk/openjdk11:jre-11.0.8_10-ubi",
+      dockerUsername := Some("akkaserverless"),
+      dockerUpdateLatest := true,
+      scalaVersion := "2.13.4",
+      ThisBuild / versionScheme := Some("semver-spec"),
+      ThisBuild / evictionErrorLevel := Level.Warn,
+      excludeLintKeys ++= Set(packageName, dockerRepository),
+      libraryDependencies ++= dependencies,
+      Compile / akkaGrpcGeneratedLanguages := Seq(AkkaGrpc.Scala),
+      Compile / akkaGrpcGeneratedSources := Seq(AkkaGrpc.Client, AkkaGrpc.Server),
+      Test / akkaGrpcGeneratedLanguages := Seq(AkkaGrpc.Scala),
+      Test / akkaGrpcGeneratedSources := Seq(AkkaGrpc.Client, AkkaGrpc.Server),
+      Test / PB.protoSources ++= (Compile / PB.protoSources).value,
 
-    // Support Apple M1 chips with locally installed/compiled protoc
-    PB.protocExecutable := {
-      if (protocbridge.SystemDetector.detectedClassifier() == "osx-aarch_64") file("/usr/local/bin/protoc")
-      else PB.protocExecutable.value
-    },
+      // Support Apple M1 chips with locally installed/compiled protoc
+      PB.protocExecutable := {
+        if (protocbridge.SystemDetector.detectedClassifier() == "osx-aarch_64") file("/usr/local/bin/protoc")
+        else PB.protocExecutable.value
+      },
 
-    Compile / PB.targets := Seq(
-      scalapb.gen() -> (Compile / sourceManaged).value / "scalapb",
-      scalapb.validate.gen() -> (Compile / sourceManaged).value / "scalapb"
-    ),
+      Compile / PB.targets := Seq(
+        scalapb.gen() -> (Compile / sourceManaged).value / "scalapb",
+        scalapb.validate.gen() -> (Compile / sourceManaged).value / "scalapb"
+      ),
 
-    // disable javadoc/scaladoc for projects published as docker images
-    Compile / packageDoc / publishArtifact := false
-
-
-  )
+      // disable javadoc/scaladoc for projects published as docker images
+      Compile / packageDoc / publishArtifact := false
+    )
+  }
 }
