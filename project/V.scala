@@ -6,7 +6,7 @@ object V {
   val akka = "2.6.16"
   val akkaGrpc = "2.0.0"
   val akkaHttp = "10.2.6"
-  val akkaServerless = "0.7.0-beta.18"
+  val akkaServerless = "0.7.0"
   val alpakka = "3.0.1"
   val commonsIo = "2.4"
   val config = "1.4.0"
@@ -40,6 +40,4 @@ object V {
     val scalaTest = "3.2.9"
     val scalaPbJson = "0.11.0"
   }
-
-
 }
