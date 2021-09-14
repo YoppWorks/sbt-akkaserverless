@@ -2,8 +2,9 @@
 An SBT plugin to support building Scala components for Akka Serverless
 
 ## Usage
-To use `sbt-akkaserverless` you need to include it in your `project/plugins.sbt`
-file like this:
+To use `sbt-akkaserverless` you need to:
+- Build it locally: `sbt publishLocal`, and
+- include it in your `project/plugins.sbt` file like this:
 ```scala
 addSbtPlugin("com.yoppworks" %% "sbt-akkaserverless" % "0.2.0")
 ```
