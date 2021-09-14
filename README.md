@@ -5,7 +5,7 @@ An SBT plugin to support building Scala components for Akka Serverless
 To use `sbt-akkaserverless` you need to include it in your `project/plugins.sbt`
 file like this:
 ```scala
-addSbtPlugin("com.yoppworks" %% "sbt-akkaserverless" % "0.1.0")
+addSbtPlugin("com.yoppworks" %% "sbt-akkaserverless" % "0.2.0")
 ```
 and then enable it in the projects that need to use it in your build.sbt,
 for example like this:
@@ -18,8 +18,6 @@ lazy val `my-project` =
 
 ## Other Plugins Included In Your Project
 - sbt-git
-- sbt-dynver
 - sbt-native-packager
-- 
-The plugin will automatically pull in
-
+- sbt-akka-grpc
+- sbt-protoc
